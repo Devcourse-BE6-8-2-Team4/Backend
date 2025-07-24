@@ -1,4 +1,4 @@
-package com.team04.back.weather.controller;
+package com.team04.back.domain.weather.weather.controller;
 
 import org.springframework.stereotype.Controller;
 

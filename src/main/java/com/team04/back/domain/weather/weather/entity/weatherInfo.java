@@ -1,6 +1,6 @@
-package com.team04.back.weather.entity;
+package com.team04.back.domain.weather.weather.entity;
 
-import com.team04.back.weather.enums.Weather;
+import com.team04.back.domain.weather.weather.enums.Weather;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

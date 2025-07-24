@@ -1,4 +1,4 @@
-package com.team04.back.weather.service;
+package com.team04.back.domain.weather.weather.service;
 
 import org.springframework.stereotype.Service;
 
