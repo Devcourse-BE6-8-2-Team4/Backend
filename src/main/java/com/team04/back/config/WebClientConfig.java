@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
     @Bean
     public WebClient weatherApiWebClient(WebClient.Builder builder) {
-        WebClient build = builder.baseUrl("https://api.openweathermap.org/data/2.5/weather")
+        WebClient build = builder.baseUrl("https://api.openweathermap.org")
                 .build();
         return build;
     }
