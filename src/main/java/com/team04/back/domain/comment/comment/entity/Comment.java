@@ -1,5 +1,6 @@
 package com.team04.back.domain.comment.comment.entity;
 
+import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import jakarta.persistence.*;
 
 @Entity
