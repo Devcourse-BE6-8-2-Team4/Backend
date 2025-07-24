@@ -34,7 +34,7 @@ public class CommentControllerTest {
     public void t1() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("api/v1/comments")
+                        get("/api/v1/comments")
                 ).andDo(print());
 
         List<Comment> comments = commentService.findAll();
@@ -64,7 +64,7 @@ public class CommentControllerTest {
     public void t2() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("api/v1/comments/search/date")
+                        get("/api/v1/comments/search/date")
                                 .param("location", "seoul")
                                 .param("date", "2022-01-01")
                 ).andDo(print());
@@ -94,7 +94,7 @@ public class CommentControllerTest {
     public void t3() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("api/v1/comments/search/temperature")
+                        get("/api/v1/comments/search/temperature")
                                 .param("location", "seoul")
                                 .param("weather", "sunny")
                 ).andDo(print());
