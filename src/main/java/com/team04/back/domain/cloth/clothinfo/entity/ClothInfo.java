@@ -62,4 +62,22 @@ public class ClothInfo{
                 .minFeelsLike(minFeelsLike)
                 .build();
     }
+
+    public void update(String clothName, String imageUrl, Category category, Double maxFeelsLike, Double minFeelsLike) {
+        if (clothName != null && !clothName.isBlank()) {
+            this.clothName = clothName;
+        }
+        if (imageUrl != null && !imageUrl.isBlank()) {
+            this.imageUrl = imageUrl;
+        }
+        if (category != null) {
+            this.category = category;
+        }
+        if (maxFeelsLike != null) {
+            this.maxFeelsLike = maxFeelsLike;
+        }
+        if (minFeelsLike != null) {
+            this.minFeelsLike = minFeelsLike;
+        }
+    }
 }
