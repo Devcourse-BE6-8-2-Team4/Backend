@@ -39,7 +39,8 @@ public class CommentController {
             @RequestParam String location,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date
     ) {
-        WeatherInfo weatherInfo = weatherService.findByLocationAndDate(location, date);
+//        WeatherInfo weatherInfo = weatherService.findByLocationAndDate(location, date);
+        WeatherInfo weatherInfo = new WeatherInfo();
         List<Comment> items = commentService.findByWeatherInfo(weatherInfo);
 
         return items.stream()
