@@ -21,4 +21,10 @@ public class CommentService {
         int month = date.getMonthValue();
         return commentRepository.findByWeatherInfoLocationAndMonth(location, month);
     }
+
+    public List<Comment> findByLocationAndTemperature(String location, Double feelsLikeTemperature) {
+        double minTemperature = feelsLikeTemperature - 2.5;
+        double maxTemperature = feelsLikeTemperature + 2.5;
+        return commentRepository.findByWeatherInfoLocationAndFeelsLikeTemperature(location, minTemperature, maxTemperature);
+    }
 }

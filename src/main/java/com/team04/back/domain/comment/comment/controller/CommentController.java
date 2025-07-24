@@ -32,13 +32,26 @@ public class CommentController {
                 .toList();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search/date")
     @Transactional(readOnly = true)
     public List<CommentDto> getCommentsByLocationAndDate(
             @RequestParam String location,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date
     ) {
         List<Comment> items = commentService.findByLocationAndDate(location, date);
+
+        return items.stream()
+                .map(CommentDto::new)
+                .toList();
+    }
+
+    @GetMapping("/search/temperature")
+    @Transactional(readOnly = true)
+    public List<CommentDto> getCommentsByLocationAndTemperature(
+            @RequestParam String location,
+            @RequestParam Double feelsLikeTemperature
+    ) {
+        List<Comment> items = commentService.findByLocationAndTemperature(location, feelsLikeTemperature);
 
         return items.stream()
                 .map(CommentDto::new)

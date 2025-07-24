@@ -55,21 +55,21 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
                     .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.weather".formatted(i)).value(comment.getWeatherInfo().getWeather()));
+                    .andExpect(jsonPath("$[%d].weatherInfo.feelsLikeTemperature".formatted(i)).value(comment.getWeatherInfo().getFeelsLikeTemperature()));
         }
     }
 
     @Test
-    @DisplayName("커멘트 조건 검색")
+    @DisplayName("커멘트 날짜 기반 검색")
     public void t2() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("api/v1/comments/search")
+                        get("api/v1/comments/search/date")
                                 .param("location", "seoul")
                                 .param("date", "2022-01-01")
                 ).andDo(print());
 
-        List<Comment> comments = commentService.findByLocationAndDate("seoul", LocalDateTime.of(2022, 1, 1, 0, 0));
+        List<Comment> comments = commentService.findByLocationAndDate("서울", LocalDateTime.of(2022, 1, 1, 0, 0));
 
         resultActions
                 .andExpect(handler().handlerType(CommentController.class))
@@ -85,8 +85,37 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$[%d].sentence".formatted(i)).value(comment.getSentence()))
                     .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.weather".formatted(i)).value(comment.getWeatherInfo().getWeather()));
+                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate()));
+        }
+    }
+
+    @Test
+    @DisplayName("커멘트 체감온도 기반 검색")
+    public void t3() throws Exception {
+        ResultActions resultActions = mvc
+                .perform(
+                        get("api/v1/comments/search/temperature")
+                                .param("location", "seoul")
+                                .param("weather", "sunny")
+                ).andDo(print());
+
+        List<Comment> comments = commentService.findByLocationAndTemperature("서울", 30.0);
+
+        resultActions
+                .andExpect(handler().handlerType(CommentController.class))
+                .andExpect(handler().methodName("getCommentsByLocationAndTemperature"))
+                .andExpect(status().isOk());
+
+        for (int i = 0; i < comments.size(); i++) {
+            Comment comment = comments.get(i);
+            resultActions
+                    .andExpect(jsonPath("$[%d].id".formatted(i)).value(comment.getId()))
+                    .andExpect(jsonPath("$[%d].email".formatted(i)).value(comment.getEmail()))
+                    .andExpect(jsonPath("$[%d].imageUrl".formatted(i)).value(comment.getImageUrl()))
+                    .andExpect(jsonPath("$[%d].sentence".formatted(i)).value(comment.getSentence()))
+                    .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
+                    .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
+                    .andExpect(jsonPath("$[%d].weatherInfo.feelsLikeTemperature".formatted(i)).value(comment.getWeatherInfo().getFeelsLikeTemperature()));
         }
     }
 }
