@@ -3,7 +3,6 @@ package com.team04.back.domain.comment.comment.controller;
 import com.team04.back.domain.comment.comment.dto.CommentDto;
 import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.service.CommentService;
-import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import com.team04.back.domain.weather.weather.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -39,9 +38,7 @@ public class CommentController {
             @RequestParam String location,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date
     ) {
-//        WeatherInfo weatherInfo = weatherService.findByLocationAndDate(location, date);
-        WeatherInfo weatherInfo = new WeatherInfo();
-        List<Comment> items = commentService.findByWeatherInfo(weatherInfo);
+        List<Comment> items = commentService.findByLocationAndDate(location, date);
 
         return items.stream()
                 .map(CommentDto::new)

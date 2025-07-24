@@ -2,8 +2,6 @@ package com.team04.back.domain.comment.comment.controller;
 
 import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.service.CommentService;
-import com.team04.back.domain.weather.weather.entity.WeatherInfo;
-import com.team04.back.domain.weather.weather.service.WeatherService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,8 +28,6 @@ public class CommentControllerTest {
     private MockMvc mvc;
     @Autowired
     private CommentService commentService;
-    @Autowired
-    private WeatherService weatherService;
 
     @Test
     @DisplayName("커멘트 다건 조회")
@@ -72,8 +69,7 @@ public class CommentControllerTest {
                                 .param("date", "2022-01-01")
                 ).andDo(print());
 
-        WeatherInfo weatherInfo = weatherService.findByLocationAndDate("seoul", "2022-01-01");
-        List<Comment> comments = commentService.findByWeatherInfo(weatherInfo);
+        List<Comment> comments = commentService.findByLocationAndDate("seoul", LocalDateTime.of(2022, 1, 1, 0, 0));
 
         resultActions
                 .andExpect(handler().handlerType(CommentController.class))

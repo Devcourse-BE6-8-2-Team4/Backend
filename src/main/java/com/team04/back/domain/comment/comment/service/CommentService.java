@@ -2,10 +2,10 @@ package com.team04.back.domain.comment.comment.service;
 
 import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.repository.CommentRepository;
-import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,7 +17,8 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-    public List<Comment> findByWeatherInfo(WeatherInfo weatherInfo) {
-        return commentRepository.findByWeatherInfo(weatherInfo);
+    public List<Comment> findByLocationAndDate(String location, LocalDateTime date) {
+        int month = date.getMonthValue();
+        return commentRepository.findByWeatherInfoLocationAndMonth(location, month);
     }
 }
