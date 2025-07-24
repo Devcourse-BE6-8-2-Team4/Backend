@@ -2,8 +2,10 @@ package com.team04.back.domain.comment.comment.entity;
 
 import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 @Entity
+@Getter
 public class Comment{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
