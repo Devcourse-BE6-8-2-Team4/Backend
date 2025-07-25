@@ -2,6 +2,7 @@ package com.team04.back.domain.weather.weather.service;
 
 import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import com.team04.back.domain.weather.weather.repository.WeatherRepository;
+import com.team04.back.infra.weather.WeatherApiClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +14,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class WeatherService {
     private final WeatherRepository weatherRepository;
+    private final WeatherApiClient weatherApiClient;
 
     @Transactional
     public WeatherInfo getWeatherInfoByLocationAndDate(double lat, double lon, LocalDateTime date) {
-        // 좌표to지역함수(lat, long)로부터 지역 정보 생성
+        // 좌표로부터 지역 이름 조회
         String location = getLocationFromCoordinates(lat, lon);
 
         // DB에서 해당 지역의 날씨 정보 조회
@@ -39,11 +41,13 @@ public class WeatherService {
         return createWeatherInfo(location, date);
     }
 
-    // 좌표를 기반으로 지역 정보를 생성하는 함수
+    // 좌표로부터 지역 이름을 가져오는 메서드
     private String getLocationFromCoordinates(double lat, double lon) {
-        // TODO: 좌표를 기반으로 지역 정보를 생성하는 로직 구현
-
-        return "서울특별시";
+        return weatherApiClient.fetchCityByCoordinates(lat, lon, 1)
+                .blockOptional()
+                .flatMap(list -> list.stream().findFirst())
+                .map(geo -> geo.getLocalNames().getKorean())
+                .orElse("알 수 없음");
     }
 
     // 유효성 검사
