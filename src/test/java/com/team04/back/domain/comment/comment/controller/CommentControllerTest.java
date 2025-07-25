@@ -4,7 +4,7 @@ import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.service.CommentService;
 import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import com.team04.back.domain.weather.weather.enums.Weather;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +33,11 @@ public class CommentControllerTest {
     @Autowired
     private CommentService commentService;
 
-    @BeforeAll
-    static void init() {
+    @BeforeEach
+    void setUp() {
         WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 1.0, 1.0, 1.0, 1.0, "location", LocalDateTime.of(2022, 1, 1, 0, 0, 0));
-        new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
+        Comment comment = new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
+        commentService.save(comment);
     }
 
     @Test

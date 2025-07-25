@@ -13,7 +13,7 @@ public interface CommentRepository extends JpaRepository<Comment, Integer> {
     @Query("""
             SELECT c FROM Comment c
             WHERE c.weatherInfo.location = :location
-            AND FUNCTION('month', c.weatherInfo.date) = :month
+            AND EXTRACT(MONTH FROM c.weatherInfo.date) = :month
             """)
     List<Comment> findByWeatherInfoLocationAndMonth(@Param("location") String location, @Param("month") int month);
 
