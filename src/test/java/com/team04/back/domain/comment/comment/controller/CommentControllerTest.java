@@ -37,7 +37,7 @@ public class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 10.0, 20.0, 25.0, 15.0, "서울", LocalDate.of(2022, 1, 1));
+        WeatherInfo mockWeather = new WeatherInfo(Weather.CLEAR_SKY, 10.0, 20.0, 25.0, 15.0, "서울", LocalDate.of(2022, 1, 1));
         weatherService.save(mockWeather);
         Comment comment = new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
         commentService.save(comment);
