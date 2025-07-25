@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AlertData {
-    private String sender_name;
+    private String senderName;
     private String event;
     private long start;
     private long end;
