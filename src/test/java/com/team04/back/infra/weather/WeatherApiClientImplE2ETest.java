@@ -102,7 +102,9 @@ class WeatherApiClientImplE2ETest {
         String country = "KR";
         int limit = 1;
 
-        Mono<List<GeoDirectResponse>> responseMono = weatherApiClient.fetchCoordinatesByCity(city, country, limit);
+        Mono<List<GeoDirectResponse>> responseMono = weatherApiClient.fetchCoordinatesByCity(
+                city, country, limit
+        );
 
         List<GeoDirectResponse> result = responseMono.block();
 
@@ -115,12 +117,11 @@ class WeatherApiClientImplE2ETest {
     @DisplayName("Geocoding API - 위도/경도 → 도시 이름 조회 테스트")
     @Test
     void testFetchCityByCoordinates() {
-        // 서울의 위도와 경도 예시
-        double lat = 37.5665;
-        double lon = 126.9780;
         int limit = 1;
 
-        Mono<List<GeoReverseResponse>> responseMono = weatherApiClient.fetchCityByCoordinates(lat, lon, limit);
+        Mono<List<GeoReverseResponse>> responseMono = weatherApiClient.fetchCityByCoordinates(
+                TEST_LAT, TEST_LON, limit
+        );
 
         List<GeoReverseResponse> result = responseMono.block();
 
