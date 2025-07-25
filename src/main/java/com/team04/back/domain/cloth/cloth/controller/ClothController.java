@@ -1,14 +1,11 @@
-package com.team04.back.domain.cloth.clothinfo.controller;
+package com.team04.back.domain.cloth.cloth.controller;
 
-import com.team04.back.domain.cloth.clothinfo.dto.OutfitResponse;
-import com.team04.back.domain.cloth.clothinfo.service.ClothInfoService;
+import com.team04.back.domain.cloth.cloth.service.ClothService;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
@@ -16,8 +13,8 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/api/v1/cloth")
 @RequiredArgsConstructor
-public class ClothInfoController {
-    private final ClothInfoService clothInfoService;
+public class ClothController {
+    private final ClothService clothService;
 
 
     record TripSchedule(

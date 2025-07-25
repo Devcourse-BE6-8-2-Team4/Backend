@@ -1,4 +1,4 @@
-package com.team04.back.domain.cloth.clothinfo.dto;
+package com.team04.back.domain.cloth.cloth.dto;
 
 import java.util.List;
 
