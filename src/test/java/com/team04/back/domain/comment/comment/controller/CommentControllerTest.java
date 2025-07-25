@@ -4,6 +4,7 @@ import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.service.CommentService;
 import com.team04.back.domain.weather.weather.entity.WeatherInfo;
 import com.team04.back.domain.weather.weather.enums.Weather;
+import com.team04.back.domain.weather.weather.service.WeatherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,10 +33,13 @@ public class CommentControllerTest {
     private MockMvc mvc;
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private WeatherService weatherService;
 
     @BeforeEach
     void setUp() {
-        WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 1.0, 1.0, 1.0, 1.0, "location", LocalDateTime.of(2022, 1, 1, 0, 0, 0));
+        WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 10.0, 20.0, 25.0, 15.0, "서울", LocalDateTime.of(2022, 1, 1, 0, 0, 0));
+        weatherService.save(mockWeather);
         Comment comment = new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
         commentService.save(comment);
     }
@@ -96,7 +100,7 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$[%d].sentence".formatted(i)).value(comment.getSentence()))
                     .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate()));
+                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))));
         }
     }
 
