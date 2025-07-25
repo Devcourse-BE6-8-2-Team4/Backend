@@ -1,9 +1,6 @@
 package com.team04.back.infra.weather;
 
-import com.team04.back.infra.weather.dto.DaySummaryApiResponse;
-import com.team04.back.infra.weather.dto.OneCallApiResponse;
-import com.team04.back.infra.weather.dto.TimeMachineApiResponse;
-import com.team04.back.infra.weather.dto.WeatherOverviewApiResponse;
+import com.team04.back.infra.weather.dto.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,5 +93,41 @@ class WeatherApiClientImplE2ETest {
         assertNotNull(response.getWeatherOverview());
         assertTrue(response.getWeatherOverview().length() > 0);
         System.out.println("Weather Overview API Response: " + response.getWeatherOverview());
+    }
+
+    @DisplayName("Geocoding API - 도시 이름 → 위도/경도 조회 테스트")
+    @Test
+    void testFetchCoordinatesByCity() {
+        String city = "Seoul";
+        String country = "KR";
+        int limit = 1;
+
+        Mono<List<GeoDirectResponse>> responseMono = weatherApiClient.fetchCoordinatesByCity(
+                city, country, limit
+        );
+
+        List<GeoDirectResponse> result = responseMono.block();
+
+        assertNotNull(result);
+        assertTrue(result.size() > 0);
+        GeoDirectResponse geo = result.get(0);
+        System.out.println("City to Coord: " + geo.getName() + " → (" + geo.getLat() + ", " + geo.getLon() + ")");
+    }
+
+    @DisplayName("Geocoding API - 위도/경도 → 도시 이름 조회 테스트")
+    @Test
+    void testFetchCityByCoordinates() {
+        int limit = 1;
+
+        Mono<List<GeoReverseResponse>> responseMono = weatherApiClient.fetchCityByCoordinates(
+                TEST_LAT, TEST_LON, limit
+        );
+
+        List<GeoReverseResponse> result = responseMono.block();
+
+        assertNotNull(result);
+        assertTrue(result.size() > 0);
+        GeoReverseResponse geo = result.get(0);
+        System.out.println("Coord to City: (" + geo.getLat() + ", " + geo.getLon() + ") → " + geo.getName());
     }
 }

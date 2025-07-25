@@ -1,9 +1,6 @@
 package com.team04.back.infra.weather;
 
-import com.team04.back.infra.weather.dto.OneCallApiResponse;
-import com.team04.back.infra.weather.dto.TimeMachineApiResponse;
-import com.team04.back.infra.weather.dto.DaySummaryApiResponse;
-import com.team04.back.infra.weather.dto.WeatherOverviewApiResponse;
+import com.team04.back.infra.weather.dto.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,5 +80,35 @@ public class WeatherApiClientImpl implements WeatherApiClient {
                         .build())
                 .retrieve()
                 .bodyToMono(WeatherOverviewApiResponse.class);
+    }
+
+    @Override
+    public Mono<List<GeoDirectResponse>> fetchCoordinatesByCity(String city, String countryCode, Integer limit) {
+        String query = countryCode != null ? city + "," + countryCode : city;
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/geo/1.0/direct")
+                        .queryParam("q", query)
+                        .queryParam("limit", limit != null ? limit : 1)
+                        .queryParam("appid", apiKey)
+                        .build())
+                .retrieve()
+                .bodyToFlux(GeoDirectResponse.class)
+                .collectList();
+    }
+
+    @Override
+    public Mono<List<GeoReverseResponse>> fetchCityByCoordinates(double lat, double lon, Integer limit) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/geo/1.0/reverse")
+                        .queryParam("lat", lat)
+                        .queryParam("lon", lon)
+                        .queryParam("limit", limit != null ? limit : 1)
+                        .queryParam("appid", apiKey)
+                        .build())
+                .retrieve()
+                .bodyToFlux(GeoReverseResponse.class)
+                .collectList();
     }
 }

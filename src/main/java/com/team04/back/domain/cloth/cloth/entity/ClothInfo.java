@@ -9,6 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+@Entity
 public class ClothInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

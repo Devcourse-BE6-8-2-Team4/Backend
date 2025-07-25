@@ -1,9 +1,6 @@
 package com.team04.back.infra.weather;
 
-import com.team04.back.infra.weather.dto.OneCallApiResponse;
-import com.team04.back.infra.weather.dto.TimeMachineApiResponse;
-import com.team04.back.infra.weather.dto.DaySummaryApiResponse;
-import com.team04.back.infra.weather.dto.WeatherOverviewApiResponse;
+import com.team04.back.infra.weather.dto.*;
 import jakarta.validation.constraints.NotNull;
 import reactor.core.publisher.Mono;
 
@@ -58,4 +55,23 @@ public interface WeatherApiClient {
      */
     Mono<WeatherOverviewApiResponse> fetchWeatherOverview(@NotNull double lat, @NotNull double lon, String date, String units);
 
+    /**
+     * Fetch coordinates by city name.
+     * 도시 이름으로 좌표를 가져옵니다.
+     * @param cityName 도시 이름. (필수)
+     * @param countryCode 국가 코드 (예: "KR"). (선택 사항)
+     * @param limit 최대 결과 수. (선택 사항)
+     * @return 도시 이름에 해당하는 좌표 목록을 포함하는 Mono.
+     */
+    Mono<List<GeoDirectResponse>> fetchCoordinatesByCity(@NotNull String cityName, String countryCode, Integer limit);
+
+    /**
+     * Fetch city by coordinates.
+     * 좌표로 도시 정보를 가져옵니다.
+     * @param lat 위도, 십진수 (-90; 90). (필수)
+     * @param lon 경도, 십진수 (-180; 180). (필수)
+     * @param limit 최대 결과 수. (선택 사항)
+     * @return 좌표에 해당하는 도시 정보 목록을 포함하는 Mono.
+     */
+    Mono<List<GeoReverseResponse>> fetchCityByCoordinates(@NotNull double lat, @NotNull double lon, Integer limit);
 }
