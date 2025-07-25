@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class CommentControllerTest {
 
     @BeforeEach
     void setUp() {
-        WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 10.0, 20.0, 25.0, 15.0, "서울", LocalDateTime.of(2022, 1, 1, 0, 0, 0));
+        WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 10.0, 20.0, 25.0, 15.0, "서울", LocalDate.of(2022, 1, 1));
         weatherService.save(mockWeather);
         Comment comment = new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
         commentService.save(comment);
@@ -81,10 +81,10 @@ public class CommentControllerTest {
                 .perform(
                         get("/api/v1/comments/search/date")
                                 .param("location", "서울")
-                                .param("date", "2022-01-01T00:00:00")
+                                .param("date", "2022-01-01")
                 ).andDo(print());
 
-        List<Comment> comments = commentService.findByLocationAndDate("서울", LocalDateTime.of(2022, 1, 1, 0, 0));
+        List<Comment> comments = commentService.findByLocationAndDate("서울", LocalDate.of(2022, 1, 1));
 
         resultActions
                 .andExpect(handler().handlerType(CommentController.class))

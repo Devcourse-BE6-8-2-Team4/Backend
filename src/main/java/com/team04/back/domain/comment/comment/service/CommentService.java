@@ -5,7 +5,7 @@ import com.team04.back.domain.comment.comment.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -17,7 +17,7 @@ public class CommentService {
         return commentRepository.findAll();
     }
 
-    public List<Comment> findByLocationAndDate(String location, LocalDateTime date) {
+    public List<Comment> findByLocationAndDate(String location, LocalDate date) {
         int month = date.getMonthValue();
         return commentRepository.findByWeatherInfoLocationAndMonth(location, month);
     }
