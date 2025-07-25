@@ -22,34 +22,20 @@ public class CommentController {
 
     @GetMapping
     @Transactional(readOnly = true)
-    public List<CommentDto> getComments() {
-        List<Comment> items = commentService.findAll();
-
-        return items.stream()
-                .map(CommentDto::new)
-                .toList();
-    }
-
-    @GetMapping("/search/date")
-    @Transactional(readOnly = true)
-    public List<CommentDto> getCommentsByLocationAndDate(
-            @RequestParam String location,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDate date
+    public List<CommentDto> getComments(
+            @RequestParam(required = false) String location,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) Double feelsLikeTemperature
     ) {
-        List<Comment> items = commentService.findByLocationAndDate(location, date);
+        List<Comment> items;
 
-        return items.stream()
-                .map(CommentDto::new)
-                .toList();
-    }
-
-    @GetMapping("/search/temperature")
-    @Transactional(readOnly = true)
-    public List<CommentDto> getCommentsByLocationAndTemperature(
-            @RequestParam String location,
-            @RequestParam Double feelsLikeTemperature
-    ) {
-        List<Comment> items = commentService.findByLocationAndTemperature(location, feelsLikeTemperature);
+        if (location != null && date != null) {
+            items = commentService.findByLocationAndDate(location, date);
+        } else if (location != null && feelsLikeTemperature != null) {
+            items = commentService.findByLocationAndTemperature(location, feelsLikeTemperature);
+        } else {
+            items = commentService.findAll();
+        }
 
         return items.stream()
                 .map(CommentDto::new)

@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,7 +68,7 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$[%d].sentence".formatted(i)).value(comment.getSentence()))
                     .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
+                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate().toString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.feelsLikeTemperature".formatted(i)).value(comment.getWeatherInfo().getFeelsLikeTemperature()));
         }
     }
@@ -79,7 +78,7 @@ public class CommentControllerTest {
     public void t2() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/v1/comments/search/date")
+                        get("/api/v1/comments")
                                 .param("location", "서울")
                                 .param("date", "2022-01-01")
                 ).andDo(print());
@@ -88,7 +87,7 @@ public class CommentControllerTest {
 
         resultActions
                 .andExpect(handler().handlerType(CommentController.class))
-                .andExpect(handler().methodName("getCommentsByLocationAndDate"))
+                .andExpect(handler().methodName("getComments"))
                 .andExpect(status().isOk());
 
         for (int i = 0; i < comments.size(); i++) {
@@ -100,7 +99,7 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$[%d].sentence".formatted(i)).value(comment.getSentence()))
                     .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))));
+                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate().toString()));
         }
     }
 
@@ -109,7 +108,7 @@ public class CommentControllerTest {
     public void t3() throws Exception {
         ResultActions resultActions = mvc
                 .perform(
-                        get("/api/v1/comments/search/temperature")
+                        get("/api/v1/comments")
                                 .param("location", "서울")
                                 .param("feelsLikeTemperature", "20.0")
                 ).andDo(print());
@@ -118,7 +117,7 @@ public class CommentControllerTest {
 
         resultActions
                 .andExpect(handler().handlerType(CommentController.class))
-                .andExpect(handler().methodName("getCommentsByLocationAndTemperature"))
+                .andExpect(handler().methodName("getComments"))
                 .andExpect(status().isOk());
 
         for (int i = 0; i < comments.size(); i++) {
