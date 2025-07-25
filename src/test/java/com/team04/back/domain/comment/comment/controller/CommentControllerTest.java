@@ -3,19 +3,20 @@ package com.team04.back.domain.comment.comment.controller;
 import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.service.CommentService;
 import com.team04.back.domain.weather.weather.entity.WeatherInfo;
-import org.junit.jupiter.api.BeforeEach;
+import com.team04.back.domain.weather.weather.enums.Weather;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,20 +33,10 @@ public class CommentControllerTest {
     @Autowired
     private CommentService commentService;
 
-    @BeforeEach
-    void setUp() {
-        WeatherInfo mockWeather = new WeatherInfo();
-        ReflectionTestUtils.setField(mockWeather, "id", 1);
-        ReflectionTestUtils.setField(mockWeather, "location", "서울");
-        ReflectionTestUtils.setField(mockWeather, "date", LocalDateTime.of(2022,1,1,0,0));
-        ReflectionTestUtils.setField(mockWeather, "weather", 1);
-        ReflectionTestUtils.setField(mockWeather, "dailyTemperatureGap", 0.1);
-        ReflectionTestUtils.setField(mockWeather, "feelsLikeTemperature", 20.0);
-        ReflectionTestUtils.setField(mockWeather, "maxTemperature", 30.0);
-        ReflectionTestUtils.setField(mockWeather, "minTemperature", 10.0);
-
-        Comment comment = new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
-        commentService.save(comment);
+    @BeforeAll
+    static void init() {
+        WeatherInfo mockWeather = new WeatherInfo(Weather.SUNNY, 1.0, 1.0, 1.0, 1.0, "location", LocalDateTime.of(2022, 1, 1, 0, 0, 0));
+        new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
     }
 
     @Test
@@ -73,7 +64,7 @@ public class CommentControllerTest {
                     .andExpect(jsonPath("$[%d].sentence".formatted(i)).value(comment.getSentence()))
                     .andExpect(jsonPath("$[%d].tagString".formatted(i)).value(comment.getTagString()))
                     .andExpect(jsonPath("$[%d].weatherInfo.location".formatted(i)).value(comment.getWeatherInfo().getLocation()))
-                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate()))
+                    .andExpect(jsonPath("$[%d].weatherInfo.date".formatted(i)).value(comment.getWeatherInfo().getDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"))))
                     .andExpect(jsonPath("$[%d].weatherInfo.feelsLikeTemperature".formatted(i)).value(comment.getWeatherInfo().getFeelsLikeTemperature()));
         }
     }

@@ -3,6 +3,7 @@ package com.team04.back.domain.weather.weather.entity;
 import com.team04.back.domain.weather.weather.enums.Weather;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class WeatherInfo{
     @Id
@@ -51,4 +53,14 @@ public class WeatherInfo{
 
     @LastModifiedDate
     private LocalDateTime modifyDate;
+
+    public WeatherInfo(Weather weather, Double dailyTemperatureGap, Double feelsLikeTemperature, Double maxTemperature, Double minTemperature, String location, LocalDateTime date) {
+        this.weather = weather;
+        this.dailyTemperatureGap = dailyTemperatureGap;
+        this.feelsLikeTemperature = feelsLikeTemperature;
+        this.maxTemperature = maxTemperature;
+        this.minTemperature = minTemperature;
+        this.location = location;
+        this.date = date;
+    }
 }
