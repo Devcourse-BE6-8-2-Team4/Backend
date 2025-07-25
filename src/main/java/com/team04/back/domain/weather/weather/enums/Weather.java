@@ -1,5 +1,10 @@
 package com.team04.back.domain.weather.weather.enums;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public enum Weather {
     // Group 2xx: Thunderstorm
     THUNDERSTORM_LIGHT_RAIN(200, "약한 비를 동반한 뇌우"),
@@ -84,5 +89,23 @@ public enum Weather {
 
     public String getDescription() {
         return description;
+    }
+
+    private static final Map<Integer, Weather> CODE_MAP =
+            Arrays.stream(values()).collect(Collectors.toMap(Weather::getCode, Function.identity()));
+
+    /**
+     * 주어진 코드에 해당하는 Weather enum을 반환합니다.
+     *
+     * @param code 날씨 코드
+     * @return 해당하는 Weather enum
+     * @throws IllegalArgumentException 코드에 해당하는 날씨가 없을 경우 예외 발생
+     */
+    public static Weather fromCode(int code) {
+        Weather weather = CODE_MAP.get(code);
+        if (weather == null) {
+            throw new IllegalArgumentException("Unknown weather code: " + code);
+        }
+        return weather;
     }
 }

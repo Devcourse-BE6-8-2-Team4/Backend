@@ -8,6 +8,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
@@ -46,7 +47,7 @@ public class WeatherInfo{
 
     // 날짜
     @Column(nullable = false)
-    private LocalDateTime date;
+    private LocalDate date;
 
     @CreatedDate
     private LocalDateTime createDate;
