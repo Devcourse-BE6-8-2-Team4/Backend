@@ -2,12 +2,15 @@ package com.team04.back.domain.comment.comment.controller;
 
 import com.team04.back.domain.comment.comment.entity.Comment;
 import com.team04.back.domain.comment.comment.service.CommentService;
+import com.team04.back.domain.weather.weather.entity.WeatherInfo;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,22 @@ public class CommentControllerTest {
     private MockMvc mvc;
     @Autowired
     private CommentService commentService;
+
+    @BeforeEach
+    void setUp() {
+        WeatherInfo mockWeather = new WeatherInfo();
+        ReflectionTestUtils.setField(mockWeather, "id", 1);
+        ReflectionTestUtils.setField(mockWeather, "location", "서울");
+        ReflectionTestUtils.setField(mockWeather, "date", LocalDateTime.of(2022,1,1,0,0));
+        ReflectionTestUtils.setField(mockWeather, "weather", 1);
+        ReflectionTestUtils.setField(mockWeather, "dailyTemperatureGap", 0.1);
+        ReflectionTestUtils.setField(mockWeather, "feelsLikeTemperature", 20.0);
+        ReflectionTestUtils.setField(mockWeather, "maxTemperature", 30.0);
+        ReflectionTestUtils.setField(mockWeather, "minTemperature", 10.0);
+
+        Comment comment = new Comment("email", "password", "imageUrl", "sentence", "tagString", mockWeather);
+        commentService.save(comment);
+    }
 
     @Test
     @DisplayName("커멘트 다건 조회")
@@ -65,8 +84,8 @@ public class CommentControllerTest {
         ResultActions resultActions = mvc
                 .perform(
                         get("/api/v1/comments/search/date")
-                                .param("location", "seoul")
-                                .param("date", "2022-01-01")
+                                .param("location", "서울")
+                                .param("date", "2022-01-01T00:00:00")
                 ).andDo(print());
 
         List<Comment> comments = commentService.findByLocationAndDate("서울", LocalDateTime.of(2022, 1, 1, 0, 0));
@@ -95,11 +114,11 @@ public class CommentControllerTest {
         ResultActions resultActions = mvc
                 .perform(
                         get("/api/v1/comments/search/temperature")
-                                .param("location", "seoul")
-                                .param("weather", "sunny")
+                                .param("location", "서울")
+                                .param("feelsLikeTemperature", "20.0")
                 ).andDo(print());
 
-        List<Comment> comments = commentService.findByLocationAndTemperature("서울", 30.0);
+        List<Comment> comments = commentService.findByLocationAndTemperature("서울", 20.0);
 
         resultActions
                 .andExpect(handler().handlerType(CommentController.class))

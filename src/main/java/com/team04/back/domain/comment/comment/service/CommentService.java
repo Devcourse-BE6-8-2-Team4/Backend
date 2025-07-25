@@ -27,4 +27,8 @@ public class CommentService {
         double maxTemperature = feelsLikeTemperature + 2.5;
         return commentRepository.findByWeatherInfoLocationAndFeelsLikeTemperature(location, minTemperature, maxTemperature);
     }
+
+    public void save(Comment comment) {
+        commentRepository.save(comment);
+    }
 }
